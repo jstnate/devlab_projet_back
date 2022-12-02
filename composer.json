@@ -1,0 +1,13 @@
+{
+    "name": "nathanlefetey/devlab_projet_back",
+    "authors": [
+        {
+            "name": "Nathan Lefetey",
+            "email": "lefetey.nathan@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/var-dumper": "^6.1",
+        "laravel/laravel": "^9.3"
+    }
+}
