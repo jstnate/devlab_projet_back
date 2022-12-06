@@ -1,8 +1,8 @@
 <?php
     session_start();
     require_once 'vendor/autoload.php';
-    require_once 'user.php';
-    require_once 'connection.php';
+    require_once 'class/user.php';
+    require_once 'class/connection.php';
 ?>
 <!doctype html>
 <html lang="en">

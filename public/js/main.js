@@ -13,12 +13,8 @@ window.onload = getFilters()
 
 document.getElementById('filters').onsubmit = (e) => {
     e.preventDefault();
-    list.innerHTML = ''
-    
-    if (genrePage > 1) {
-        genrePage = 1
-    }
-
+    genrePage = 1
+    currentPage = 1
     selectedGenre = genre.value
     console.log(selectedGenre)
     getFilm(0, 20)
@@ -30,6 +26,7 @@ btn.addEventListener('click', getFilm(minCount, maxCount))
 
 // Show film
 async function getFilm(min, max) {
+    list.innerHTML = ''
     for (let i = min; i < max; i++) {
         if (selectedGenre === 'null') {
             await fetch('https://api.themoviedb.org/3/movie/' + i + '?api_key=051277f4f78b500821fed3e0e4d59bf4&language=en=US')
@@ -64,12 +61,30 @@ function showFilm(data) {
     // p.innerHTML = data.overview
     let a = document.createElement('a')
     a.innerHTML = 'Voir le film'
-    a.href = 'singlemovie.php?id=' + data.id
+    a.href = 'movie.php?id=' + data.id + '&name=' + data.title
+
+    let addToAlbum = document.createElement('form')
+    let link = document.createElement('input')
+    let button = document.createElement('button')
+
+    addToAlbum.method = 'POST'
+
+    link.type = 'hidden'
+    link.name = 'film-id'
+    link.value = data.id
+
+    button.type = 'submit'
+    // button.name = 'album.php'
+    button.innerHTML = "Tout droit dans l'album.php"
+
+    addToAlbum.appendChild(link)
+    addToAlbum.appendChild(button)
 
     // film.appendChild(img)
     film.appendChild(h1)
     // film.appendChild(p)
     film.appendChild(a)
+    film.appendChild(addToAlbum)
     list.appendChild(film)
 }
 // Create option for each movie genre
@@ -106,8 +121,6 @@ pagePlus.addEventListener('click', () => {
         maxCount = genrePage * 20
         getFilm(0, 20)
     }
-
-    list.innerHTML = ''
 })
 
 pageMinus.addEventListener('click', () => {
@@ -123,6 +136,5 @@ pageMinus.addEventListener('click', () => {
             maxCount = genrePage * 20
             getFilm(0, 20)
         }
-        list.innerHTML = ''
     }
 })
