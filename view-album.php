@@ -36,10 +36,34 @@
                             // let p = document.createElement('p')
                             // p.innerHTML = data.overview
 
+                            let deleteForm = document.createElement('form')
+                            let filmId = document.createElement('input')
+                            let button = document.createElement('button')
+
+                            deleteForm.method = 'POST'
+                            filmId.value = data.id
+                            filmId.name = 'film-id'
+                            filmId.type = 'hidden'
+                            button.type = 'submit'
+                            button.name = 'delete'
+                            button.innerHTML = "Supprimer de l'album"
+
+                            deleteForm.appendChild(filmId)
+                            deleteForm.appendChild(button)
+
                             movie.appendChild(h1)
+                            movie.appendChild(deleteForm)
                         })
                 </script>
             <?php }
+
+            if (isset($_POST['delete'])) {
+                $connection = new Connection();
+                $albumId = $_GET['album-id'];
+                $filmId = $_POST['film-id'];
+                $request = $connection->removeFilm($filmId, $albumId);
+                header("Refresh:0");
+            }
         }
     ?>
 </body>

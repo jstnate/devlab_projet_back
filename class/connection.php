@@ -66,7 +66,6 @@ class Connection
         $statement->execute(array($_SESSION['user_id']));
         return $statement;
     }
-
     public function insertInLiked($id)
     {
         $query = 'INSERT INTO movies_albums (movie_id, album_id) VALUES (:movie, :album)';
@@ -93,11 +92,22 @@ class Connection
             'albumId' => $album
         ]);
     }
-
     public function getFilms($album) {
         $query = 'SELECT * FROM movies_albums WHERE album_id = ?';
         $statement = $this->pdo->prepare($query);
         $statement->execute(array($album));
         return $statement;
+    }
+
+    public function removeFilm($film, $album)
+    {
+        $query = 'DELETE FROM movies_albums WHERE movie_id = :film AND album_id = :album';
+        $statement = $this->pdo->prepare($query);
+        $result = $statement->execute([
+            'film' => $film,
+            'album' => $album
+        ]);
+
+        return $result;
     }
 }
