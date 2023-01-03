@@ -20,9 +20,8 @@ document.getElementById('filters').onsubmit = (e) => {
     getFilm(0, 20)
 }
 
-
-
 btn.addEventListener('click', getFilm(minCount, maxCount))
+
 
 // Show film
 async function getFilm(min, max) {
@@ -57,33 +56,67 @@ function showFilm(data) {
     // img.src = 'https://image.tmdb.org/t/p/w500' + data.poster_path
     let h1 = document.createElement('h1')
     h1.innerHTML = data.title
+    h1.classList.add('text-red', 'text-3xl')
     // let p = document.createElement('p')
     // p.innerHTML = data.overview
     let a = document.createElement('a')
     a.innerHTML = 'Voir le film'
     a.href = 'movie.php?id=' + data.id + '&name=' + data.title
 
+    // Add to liked films
+    let addToLiked = document.createElement('form')
+    let likedId = document.createElement('input')
+    let addLiked = document.createElement('button')
+
+    addToLiked.method = 'POST'
+    addLiked.type = 'submit'
+    addLiked.name = 'liked-mark'
+    addLiked.innerHTML = 'Aimer'
+    likedId.value = data.id
+    likedId.name = 'film-id'
+    likedId.type = 'hidden'
+
+    addToLiked.appendChild(likedId)
+    addToLiked.appendChild(addLiked)
+
+    // Add to watched films
+    let addToWatched = document.createElement('form')
+    let addWatched = document.createElement('button')
+    let watchedId = document.createElement('input')
+
+    addToWatched.method = 'POST'
+    addWatched.type = 'submit'
+    addWatched.name = 'watched-mark'
+    addWatched.innerHTML = 'Visionner'
+    watchedId.value = data.id
+    watchedId.name = 'film-id'
+    watchedId.type = 'hidden'
+
+    addToWatched.appendChild(watchedId)
+    addToWatched.appendChild(addWatched)
+
+    // Add to specified album
     let addToAlbum = document.createElement('form')
-    let link = document.createElement('input')
     let button = document.createElement('button')
+    let filmId = document.createElement('input')
 
-    addToAlbum.method = 'POST'
-
-    link.type = 'hidden'
-    link.name = 'film-id'
-    link.value = data.id
-
+    addToAlbum.method = 'GET'
     button.type = 'submit'
-    // button.name = 'album.php'
-    button.innerHTML = "Tout droit dans l'album.php"
+    button.name = 'add-to'
+    button.innerHTML = "Tout droit dans l'album"
+    filmId.value = data.id
+    filmId.name = 'film-id'
+    filmId.type = 'hidden'
 
-    addToAlbum.appendChild(link)
+    addToAlbum.appendChild(filmId)
     addToAlbum.appendChild(button)
 
     // film.appendChild(img)
     film.appendChild(h1)
     // film.appendChild(p)
     film.appendChild(a)
+    film.appendChild(addToLiked)
+    film.appendChild(addToWatched)
     film.appendChild(addToAlbum)
     list.appendChild(film)
 }

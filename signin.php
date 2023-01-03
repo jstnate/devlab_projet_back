@@ -1,7 +1,7 @@
 <?php
     session_start();
-    require_once 'vendor/autoload.php';
     require_once 'class/user.php';
+    require_once 'class/album.php';
     require_once 'class/connection.php';
 ?>
 <!doctype html>
@@ -58,8 +58,25 @@
                 $connection = new Connection();
                 $insert = $connection->insertUser($user);
 
+                $liked_album = new Album(
+                    'Films aimés',
+                    1
+                );
+
+                $visioned_album = new Album(
+                    'Films visionés',
+                    1
+                );
+
                 if ($insert) {
-                    $_SESSION['user_id'] = $insert['id'];
+                    $request = $connection->getUserId($_POST['email']);
+                    $_SESSION['user_id'] = $request['id'];
+                    $liked = $connection->createAlbum($liked_album);
+                    $visioned = $connection->createAlbum($visioned_album);
+                    $getLiked = $connection->getAlbum('Films Aimés');
+                    $getWatched = $connection->getAlbum('Films visionés');
+                    $_SESSION['liked'] = $getLiked;
+                    $_SESSION['watched'] = $getWatched;
                     header('Location: index.php');
                 } else {
                     echo '<h2>Erreur interne, veuillez reéssayer ultérieurement</h2>';

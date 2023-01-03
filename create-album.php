@@ -15,19 +15,28 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="">
+    <form method="POST">
         <input type="text" name="albumName" placeholder="Album name">
+        <select name="privacy">
+            <option value="1">Private</option>
+            <option value="0">Public</option>
+        </select>
         <button type="submit">Un nouveau album</button>
     </form>
 
     <?php
-        if ($_POST) {
+        if(isset($_POST['albumName'])){
             $album = new Album(
-                    $_POST['albumName']
+                    $_POST['albumName'],
+                    $_POST['privacy']
             );
             $connection = new Connection();
-            $
-
+            $result = $connection->createAlbum($album);
+                if($result){
+                    echo 'Album created successfully';
+                }else {
+                    echo 'Something went wrong';
+                }
         }
     ?>
 </body>

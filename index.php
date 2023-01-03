@@ -16,6 +16,10 @@
         <title>Document</title>
     </head>
 <body>
+<?php
+    echo 'id de album like : ' . $_SESSION['liked'];
+    echo 'id de album watch : ' .$_SESSION['watched'];
+?>
     <form id="filters" method="POST">
         <select name="genre" id="genre">
             <option value="null">Select genre</option>
@@ -30,9 +34,46 @@
     <span id="page-minus">Prev Page</span>
 
     <?php
-        if (isset($_POST['film-id'])) {
+        if (isset($_GET['film-id'])) {
+            $connection = new Connection();
+            $list = $connection->getAllAlbums();
+
+            foreach ($list as $myAlbum) { ?>
+                <form id="show-album" method="POST">
+                    <input type="hidden" name="albumId" value="<?= $myAlbum['id'] ?>">
+                    <button type="submit"><?= $myAlbum['name'] ?></button>
+                </form>
+            <?php }
 
         }
+
+    if (isset($_POST['albumId'])) {
+        if (isset($_GET['film-id'])) {
+            $film = $_GET['film-id'];
+        }
+        $album = $_POST['albumId'];
+        $connection = new Connection();
+        $result = $connection->insertFilm($film, $album);
+
+        if ($result) {
+            echo "Film ajouté à l'album";
+        } else {
+            "Echec";
+        }
+    }
+
+    if (isset($_POST['liked-mark'])) {
+        $connection = new Connection();
+        $id = $_POST['film-id'];
+        $insert = $connection->insertInLiked($id);
+    }
+
+    if (isset($_POST['watched-mark'])) {
+        $connection = new Connection();
+        $id = $_POST['film-id'];
+        $insert = $connection->insertInWatched($id);
+    }
+
     ?>
 </body>
 </html>
