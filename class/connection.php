@@ -143,13 +143,14 @@ class Connection
         ]);
     }
 
-    public function sendMessage($shipperName, $albumId, $receiverId)
+    public function sendMessage($shipperName, $albumId, $albumName, $receiverId)
     {
-        $query = 'INSERT INTO share_message (shipper_name, album_id, receiver_id) VALUES (:shipper, :album, :receiver)';
+        $query = 'INSERT INTO share_message (shipper_name, album_id, album_name, receiver_id) VALUES (:shipper, :albumId, :albumName, :receiver)';
         $statement = $this->pdo->prepare($query);
         return $statement->execute([
             'shipper' => $shipperName,
-            'album' => $albumId,
+            'albumId' => $albumId,
+            'albumName' => $albumName,
             'receiver' => $receiverId
         ]);
     }

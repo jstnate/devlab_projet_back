@@ -34,9 +34,7 @@
             $result = $connection->createAlbum($album);
                 if($result){
                     $getId = $connection->getAlbum($_POST['albumName']);
-                    var_dump($getId);
                     $add = $connection->addAutorisation($getId['id'], $_SESSION['user_id']);
-                    var_dump($add);
                     echo 'Album created successfully';
                 }else {
                     echo 'Something went wrong';

@@ -25,6 +25,7 @@
                 <?php if ($album['name'] !== 'Films visionés' && $album['name'] !== 'Films aimés') { ?>
                     <form method="GET">
                         <input type="hidden" name="album-id" value="<?= $album['id'] ?>">
+                        <input type="hidden" name="album-name" value="<?= $album['name'] ?>">
                         <button type="submit">Partager l'album</button>
                     </form>
                 <?php }
@@ -45,12 +46,12 @@
             }
 
             if (isset($_POST['share-id'])) {
-                $send = $connection->sendMessage($_SESSION['user_name'], $_GET['album-id'], $_POST['share-id']);
+                $send = $connection->sendMessage($_SESSION['user_name'], $_GET['album-id'], $_GET['album-name'], $_POST['share-id']);
 
                 if ($send) {
-                    header('Location: my-albums.php');
+                    echo '<h2>Album partagé...</h2>';
                 } else {
-                    echo '<h2> Erreur interne veuillez réessayer...</h2>';
+                    echo '<h2>Erreur interne veuillez réessayer...</h2>';
                 }
 
             }
