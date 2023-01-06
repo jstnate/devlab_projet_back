@@ -21,11 +21,35 @@ class Connection
         ]);
     }
 
-    public function getUserId($email)
+    public function getUsers()
     {
-        $query = "SELECT id From users WHERE email = ?";
+        $query = 'SELECT * FROM users';
+        $statement = $this->pdo->prepare($query);
+        $statement->execute();
+        return $statement->fetchAll();
+    }
+
+    public function getUserByEmail($email)
+    {
+        $query = "SELECT * From users WHERE email = ?";
         $statement = $this->pdo->prepare($query);
         $statement->execute(array($email));
+        return $statement->fetch();
+    }
+
+    public function getUserByName($name)
+    {
+        $query = 'SELECT * FROM users WHERE pseudo LIKE ?';
+        $statement = $this->pdo->prepare($query);
+        $statement->execute(array('%' . $name . '%'));
+        return $statement->fetchAll();
+    }
+
+    public function getUserById($id)
+    {
+        $query = 'SELECT * FROM users WHERE id LIKE ?';
+        $statement = $this->pdo->prepare($query);
+        $statement->execute(array($id));
         return $statement->fetch();
     }
     public function emailVerify($email)
@@ -59,31 +83,40 @@ class Connection
         return $statement->fetch();
     }
 
-    public function getAllAlbums()
+    public function getAllAlbums($id)
     {
-        $query = 'SELECT * FROM albums WHERE user_id = ?';
+        $query = 'SELECT * FROM albums JOIN albums_autorisations ON album_id = albums.id WHERE user_authorized = ?';
         $statement = $this->pdo->prepare($query);
-        $statement->execute(array($_SESSION['user_id']));
-        return $statement;
+        $statement ->execute(array($id));
+        return $statement->fetchAll();
     }
-    public function insertInLiked($id)
+
+    public function getPublicAlbums($id)
     {
-        $query = 'INSERT INTO movies_albums (movie_id, album_id) VALUES (:movie, :album)';
+        $query = 'SELECT * FROM albums JOIN albums_autorisations ON album_id = albums.id WHERE user_authorized = ? AND privacy = "0"';
+        $statement = $this->pdo->prepare($query);
+        $statement->execute(array($id));
+        return $statement->fetchAll();
+    }
+
+    public function getLikedAlbums($id)
+    {
+        $query = 'SELECT * FROM albums JOIN albums_likes ON album_id = albums.id WHERE user_liking = ?';
+        $statement = $this->pdo->prepare($query);
+        $statement ->execute(array($id));
+        return $statement->fetchAll();
+    }
+
+    public function albumLike($album, $user)
+    {
+        $query = 'INSERT INTO albums_likes (album_id, user_liking) VALUES (:albumId, :userId)';
         $statement = $this->pdo->prepare($query);
         return $statement->execute([
-            'movie' => $id,
-            'album' => $_SESSION['liked']
+            'albumId' => $album,
+            'userId' => $user
         ]);
     }
-    public function insertInWatched($id)
-    {
-        $query = 'INSERT INTO movies_albums (movie_id, album_id) VALUES (:movie, :album)';
-        $statement = $this->pdo->prepare($query);
-        return $statement->execute([
-            'movie' => $id,
-            'album' => $_SESSION['watched']
-        ]);
-    }
+
     public function insertFilm($film, $album): bool
     {
         $query = 'INSERT INTO movies_albums (movie_id, album_id) VALUES (:movieId, :albumId)';
@@ -92,6 +125,7 @@ class Connection
             'albumId' => $album
         ]);
     }
+
     public function getFilms($album) {
         $query = 'SELECT * FROM movies_albums WHERE album_id = ?';
         $statement = $this->pdo->prepare($query);
@@ -99,15 +133,49 @@ class Connection
         return $statement;
     }
 
-    public function removeFilm($film, $album)
+    public function removeFilm($film, $album): bool
     {
         $query = 'DELETE FROM movies_albums WHERE movie_id = :film AND album_id = :album';
         $statement = $this->pdo->prepare($query);
-        $result = $statement->execute([
+        return $statement->execute([
             'film' => $film,
             'album' => $album
         ]);
+    }
 
-        return $result;
+    public function sendMessage($shipperName, $albumId, $receiverId)
+    {
+        $query = 'INSERT INTO share_message (shipper_name, album_id, receiver_id) VALUES (:shipper, :album, :receiver)';
+        $statement = $this->pdo->prepare($query);
+        return $statement->execute([
+            'shipper' => $shipperName,
+            'album' => $albumId,
+            'receiver' => $receiverId
+        ]);
+    }
+
+    public function getMessage($receiverId)
+    {
+        $query = 'SELECT * FROM share_message WHERE receiver_id = ?';
+        $statement = $this->pdo->prepare($query);
+        $statement->execute(array($receiverId));
+        return $statement->fetchAll();
+    }
+
+    public function addAutorisation($album, $user)
+    {
+        $query = 'INSERT INTO albums_autorisations (album_id, user_authorized) VALUES (:album, :user)';
+        $statement = $this->pdo->prepare($query);
+        return $statement->execute([
+            'album' => $album,
+            'user' => $user
+        ]);
+    }
+
+    public function deleteMessage($message)
+    {
+        $query = 'DELETE FROM share_message WHERE id = ?';
+        $statement = $this->pdo->prepare($query);
+        return $statement->execute(array($message));
     }
 }

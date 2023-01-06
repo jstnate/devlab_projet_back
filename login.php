@@ -27,13 +27,16 @@
             $email = $_POST['email'];
             $user = $connection->emailVerify($email);
 
-            if (md5($_POST['password'] . 'SALT') === $user['password']) {
-                $_SESSION['user_id'] = $user['id'];
-                $getLiked = $connection->getAlbum('Films Aimés');
-                $getWatched = $connection->getAlbum('Films visionés');
-                $_SESSION['liked'] = $getLiked['id'];
-                $_SESSION['watched'] = $getWatched['id'];
-                header('Location: index.php');
+            if ($user) {
+                if (md5($_POST['password'] . 'SALT') === $user['password']) {
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_name'] = $user['pseudo'];
+                    $getLiked = $connection->getAlbum('Films Aimés');
+                    $getWatched = $connection->getAlbum('Films visionés');
+                    $_SESSION['liked'] = $getLiked['id'];
+                    $_SESSION['watched'] = $getWatched['id'];
+                    header('Location: index.php');
+                }
             } else {
                 echo '<h2>Erreur interne, veuillez reéssayer ultérieurement</h2>';
             }

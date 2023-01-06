@@ -102,7 +102,6 @@ function showFilm(data) {
 
     addToAlbum.method = 'GET'
     button.type = 'submit'
-    button.name = 'add-to'
     button.innerHTML = "Tout droit dans l'album"
     filmId.value = data.id
     filmId.name = 'film-id'

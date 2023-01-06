@@ -60,23 +60,26 @@
 
                 $liked_album = new Album(
                     'Films aimés',
-                    1
+                    0
                 );
 
                 $visioned_album = new Album(
                     'Films visionés',
-                    1
+                    0
                 );
 
                 if ($insert) {
-                    $request = $connection->getUserId($_POST['email']);
+                    $request = $connection->getUserByEmail($_POST['email']);
                     $_SESSION['user_id'] = $request['id'];
+                    $_SESSION['user_name'] = $request['pseudo'];
                     $liked = $connection->createAlbum($liked_album);
                     $visioned = $connection->createAlbum($visioned_album);
                     $getLiked = $connection->getAlbum('Films Aimés');
                     $getWatched = $connection->getAlbum('Films visionés');
-                    $_SESSION['liked'] = $getLiked;
-                    $_SESSION['watched'] = $getWatched;
+                    $_SESSION['liked'] = $getLiked['id'];
+                    $_SESSION['watched'] = $getWatched['id'];
+                    $liked_true = $connection->addAutorisation($_SESSION['liked'], $_SESSION['user_id']);
+                    $watched_true = $connection->addAutorisation($_SESSION['watched'], $_SESSION['user_id']);
                     header('Location: index.php');
                 } else {
                     echo '<h2>Erreur interne, veuillez reéssayer ultérieurement</h2>';
