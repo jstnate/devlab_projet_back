@@ -1,79 +1,107 @@
 <?php
-  if (!empty($_GET['q'])) {
-    switch ($_GET['q']) {
-      case 'info':
-        phpinfo(); 
-        exit;
-      break;
+    session_start();
+    require_once "class/album.php";
+    require_once "class/connection.php";
+    require_once "class/user.php";
+
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: login.php');
     }
-  }
 ?>
-<!DOCTYPE html>
-<html>
+
+<!doctype html>
+<html lang="en">
     <head>
-        <title>Laragon</title>
-
-        <link href="https://fonts.googleapis.com/css?family=Karla:400" rel="stylesheet" type="text/css">
-
-        <style>
-            html, body {
-                height: 100%;
-            }
-
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                display: table;
-                font-weight: 100;
-                font-family: 'Karla';
-            }
-
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
-
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
-
-            .title {
-                font-size: 96px;
-            }
-
-            .opt {
-                margin-top: 30px;
-            }
-
-            .opt a {
-              text-decoration: none;
-              font-size: 150%;
-            }
-            
-            a:hover {
-              color: red;
-            }
-        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <script src="./public/js/main.js" defer></script>
+        <script src="./public/js/search.js" defer></script>
+        <title>Document</title>
     </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title" title="Laragon">Laragon</div>
-     
-                <div class="info"><br />
-                      <?php print($_SERVER['SERVER_SOFTWARE']); ?><br />
-                      PHP version: <?php print phpversion(); ?>   <span><a title="phpinfo()" href="/?q=info">info</a></span><br />
-                      Document Root: <?php print ($_SERVER['DOCUMENT_ROOT']); ?><br />
+<body>
 
-                </div>
-                <div class="opt">
-                  <div><a title="Getting Started" href="https://laragon.org/docs">Getting Started</a></div>
-                </div>
-            </div>
+    <form method="POST">
+        <label for="film-search">Quel filme recherchez-vous ?</label>
+        <input type="text" id="film-search">
+        <button type="submit">Rechercher</button>
+    </form>
 
-        </div>
-    </body>
+    <?= $_SESSION['user_id'] . $_SESSION['user_name']?>
+    <aside>
+        <nav>
+            <form method="POST">
+                <label for="user-search">Qui recherchez-vous ?</label>
+                <input type="text" name="username" id="user-search">
+                <button type="submit">Rechercher</button>
+            </form>
+        </nav>
+
+        <?php if (isset($_POST['username'])) {
+            $connection = new Connection();
+            $search = $connection->getUserByName($_POST['username']);
+            if ($search) {
+                foreach ($search as $user) { ?>
+                    <a href="view-profil.php?user-id=<?= $user['id'] ?>"> <?= $user['pseudo'] ?></a>
+                <?php }
+            }
+        }?>
+    </aside>
+
+    <form id="filters" method="POST">
+        <select name="genre" id="genre">
+            <option value="null">Select genre</option>
+        </select>
+        <button type="submit" id="btn">Submit</button>
+    </form>
+
+    <section id="list">
+
+    </section>
+    <span id="page-plus">Next Page</span>
+    <span id="page-minus">Prev Page</span>
+
+    <?php
+        if (isset($_GET['film-id'])) {
+            $connection = new Connection();
+            $list = $connection->getAllAlbums($_SESSION['user_id']);
+
+            foreach ($list as $myAlbum) { ?>
+                <form id="show-album" method="POST">
+                    <input type="hidden" name="albumId" value="<?= $myAlbum['id'] ?>">
+                    <button type="submit"><?= $myAlbum['name'] ?></button>
+                </form>
+            <?php }
+
+        }
+
+        if (isset($_POST['albumId'])) {
+            if (isset($_GET['film-id'])) {
+                $film = $_GET['film-id'];
+            }
+            $album = $_POST['albumId'];
+            $connection = new Connection();
+            $result = $connection->insertFilm($film, $album);
+
+            if ($result) {
+                echo "Film ajouté à l'album";
+            } else {
+                "Echec";
+            }
+        }
+
+        if (isset($_POST['liked-mark'])) {
+            $connection = new Connection();
+            $id = $_POST['film-id'];
+            $insert = $connection->insertFilm($id, $_SESSION['liked']);
+        }
+
+        if (isset($_POST['watched-mark'])) {
+            $connection = new Connection();
+            $id = $_POST['film-id'];
+            $insert = $connection->insertFilm($id, $_SESSION['watched']);
+        }
+    ?>
+</body>
 </html>

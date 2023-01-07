@@ -1,5 +1,7 @@
 <?php
     session_start();
+    require_once "class/user.php";
+    require_once 'class/connection.php';
 ?>
 
 <!doctype html>
@@ -12,32 +14,34 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="post">
-        <input type="text" type="email" name="email" placeholder="enter ur mail">
-        <input type="text" type="password" name="password" placeholder="enter ur password">
-        <input type="submit">
+    <form method="POST">
+        <input type="email" name="email" placeholder="enter ur mail">
+        <input type="password" name="password" placeholder="enter ur password">
+        <button type="submit" name="register">Log toi FDP</button>
     </form>
-</body>
 
-<?php
-    require_once 'vendor/autoload.php';
-    require_once 'user.php';
-    require_once 'connection.php';
+    <?php
+        if($_POST){
 
-    if($_POST){
-        $connection = new Connection;
-        $email = $_POST['email'];
-        $user = $connection->login($email);
+            $connection = new Connection();
+            $email = $_POST['email'];
+            $user = $connection->emailVerify($email);
 
-        if (md5($_POST['password'] . 'SALT') === $user['password']) {
-            $_SESSION['user_id'] = $user['id'];
-            header('Location: index.php');
-        } else {
-            echo '<h2>Erreur interne, veuillez reéssayer ultérieurement</h2>';
+            if ($user) {
+                if (md5($_POST['password'] . 'SALT') === $user['password']) {
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_name'] = $user['pseudo'];
+                    $getLiked = $connection->getAlbum('Films Aimés');
+                    $getWatched = $connection->getAlbum('Films visionés');
+                    $_SESSION['liked'] = $getLiked['id'];
+                    $_SESSION['watched'] = $getWatched['id'];
+                    header('Location: index.php');
+                }
+            } else {
+                echo '<h2>Erreur interne, veuillez reéssayer ultérieurement</h2>';
+            }
+
         }
-
-    }
-?>
-
-
+    ?>
+</body>
 </html>
