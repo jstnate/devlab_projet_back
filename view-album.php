@@ -3,6 +3,10 @@
     require_once "class/user.php";
     require_once "class/album.php";
     require_once "class/connection.php";
+
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: login.php');
+    }
 ?>
 
 <!doctype html>

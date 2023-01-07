@@ -7,21 +7,23 @@ let maxCount = 20
 let btn = document.getElementById('btn')
 let genre = document.getElementById('genre')
 let selectedGenre = 'null'
+let sort = 'popularity.desc'
+
 
 
 window.onload = getFilters()
 
 document.getElementById('filters').onsubmit = (e) => {
     e.preventDefault();
+    document.getElementById('sort-tag').style.display = 'block'
+    sort = 'popularity.desc'
     genrePage = 1
     currentPage = 1
     selectedGenre = genre.value
-    console.log(selectedGenre)
     getFilm(0, 20)
 }
 
 btn.addEventListener('click', getFilm(minCount, maxCount))
-
 
 // Show film
 async function getFilm(min, max) {
@@ -39,7 +41,7 @@ async function getFilm(min, max) {
                     }
                 })
         } else {
-            await fetch('https://api.themoviedb.org/3/discover/movie?api_key=051277f4f78b500821fed3e0e4d59bf4&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=' + genrePage + '&with_genres=' + selectedGenre + '&with_watch_monetization_types=flatrate')
+            await fetch('https://api.themoviedb.org/3/discover/movie?api_key=051277f4f78b500821fed3e0e4d59bf4&language=en-US&sort_by=' + sort + '&include_adult=false&include_video=false&page=' + genrePage + '&with_genres=' + selectedGenre + '&with_watch_monetization_types=flatrate')
                 .then(async result => await result.json())
                 .then(data => {
                     let infos = data.results[i]
@@ -121,7 +123,6 @@ function showFilm(data) {
 }
 // Create option for each movie genre
 let filters = document.getElementById('genre')
-
 async function getFilters() {
     await fetch('https://api.themoviedb.org/3/genre/movie/list?api_key=051277f4f78b500821fed3e0e4d59bf4&language=en=US')
         .then(result => result.json())
@@ -136,11 +137,9 @@ async function getFilters() {
         })
 }
 
-
 // Page change function
 let pagePlus = document.getElementById('page-plus')
 let pageMinus = document.getElementById('page-minus')
-
 pagePlus.addEventListener('click', () => {
     if (selectedGenre === 'null') {
         currentPage += 1
@@ -154,9 +153,8 @@ pagePlus.addEventListener('click', () => {
         getFilm(0, 20)
     }
 })
-
 pageMinus.addEventListener('click', () => {
-    if (currentPage > 0 && genrePage > 0) {
+    if (currentPage > 1 && genrePage > 1) {
         if (selectedGenre === 'null') {
             currentPage -= 1
             minCount = (currentPage - 1) * 20
@@ -164,9 +162,39 @@ pageMinus.addEventListener('click', () => {
             getFilm(minCount, maxCount)
         } else {
             genrePage -= 1
-            minCount = (genrePage - 1) * 20
-            maxCount = genrePage * 20
             getFilm(0, 20)
         }
     }
 })
+
+let sortButton = document.querySelectorAll('#tag')
+
+sortButton.forEach((button) => {
+    button.addEventListener('click', () => {
+        if (button.value === 'popularity.desc') {
+            document.getElementById('sort-infos').innerHTML = 'Popularité Décroissante'
+            button.value = 'popularity.asc'
+        } else if (button.value === 'popularity.asc') {
+            document.getElementById('sort-infos').innerHTML = 'Popularité Croissante'
+            button.value = 'popularity.desc'
+        } else if (button.value === 'original_title.desc') {
+            document.getElementById('sort-infos').innerHTML = 'Nom Décroissant'
+            button.value = 'original_title.asc'
+        } else if (button.value === 'original_title.asc') {
+            document.getElementById('sort-infos').innerHTML = 'Nom Croissant'
+            button.value = 'original_title.desc'
+        } else if (button.value === 'vote_average.desc') {
+            document.getElementById('sort-infos').innerHTML = 'Avis Décroissant'
+            button.value = 'vote_average.asc'
+        } else if (button.value === 'vote_average.asc') {
+            document.getElementById('sort-infos').innerHTML = 'Avis Croissant'
+            button.value = 'vote_average.desc'
+        }
+        console.log(button.value)
+        sort = button.value
+        getFilm(0,20)
+    })
+})
+
+
+

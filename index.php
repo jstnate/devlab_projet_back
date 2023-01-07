@@ -16,6 +16,7 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="public/css/style.css">
         <script src="./public/js/main.js" defer></script>
         <title>Document</title>
     </head>
@@ -49,11 +50,18 @@
         <button type="submit" id="btn">Submit</button>
     </form>
 
+    <div id="sort-tag" style="display: none">
+        <button id="tag" value="original_title.desc">Trier par nom</button>
+        <button id="tag" value="vote_average.desc">Trier par avis</button>
+        <button id="tag" value="popularity.desc">Trier par popularité</button>
+        <p>Les films sont triés par : <span id="sort-infos">Popularité décroissante</span></p>
+    </div>
+
     <section id="list">
 
     </section>
-    <span id="page-plus">Next Page</span>
     <span id="page-minus">Prev Page</span>
+    <span id="page-plus">Next Page</span>
 
     <?php
         if (isset($_GET['film-id'])) {
