@@ -40,7 +40,7 @@
             <input class="w-[272px] h-[48px] rounded-[6px] mt-[16px] pl-[8px]" type="email" name="email" placeholder="Enter your mail">
             <input class="w-[272px] h-[48px] rounded-[6px] pl-[8px]" type="password" name="password" placeholder="Enter your password">
             <button class="w-[172px] h-[48px] rounded-[6px] bg-red-btn text-white mt-[16px]" type="submit" name="register">Connexion</button>
-            <p class="text-white text-sm mt-[8px] m-auto">Premiere visite sur FlouFlix ? <a href="#">Inscrivez-vous</a></p>
+            <p class="text-white text-sm mt-[8px] m-auto">Premiere visite sur FlouFlix ? <a href="signin.php">Inscrivez-vous</a></p>
         </form>
     </div>
     

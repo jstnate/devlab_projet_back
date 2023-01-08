@@ -15,6 +15,18 @@
             header('Location: login.php');
         }
     }
+
+    $connection = new Connection();
+
+    if (isset($_POST['share-id'])) {
+        $send = $connection->sendMessage($_SESSION['user_name'], $_GET['album-id'], $_GET['album-name'], $_POST['share-id']);
+
+        if ($send) {
+            header('Location: my-albums.php?status=sucess');
+        } else {
+            header('Location: my-albums.php?status=error');;
+        }
+    }
 ?>
 
 <!doctype html>
@@ -33,11 +45,18 @@
             'black-header': '#080808',
             'grey-header': '#121212',
             'red-btn': '#e40b18'
-          }
+          },
+            gridTemplateColumns: {
+                'cards': 'repeat(auto-fit, minmax(250px, 1fr))'
+            },
+            placeItems: {
+              'top': 'center start'
+            }
         }
       }
     }
     </script>
+    <script src="public/js/burger.js" defer></script>
     <title>Flouflix - Mes albums</title>
 </head>
 <body class="bg-[#121212] text-white py-[10vh] relative z-0">
@@ -63,57 +82,55 @@
         </div>
     </header>
 
-    <div>
-        <h1>
+    <div class="w-[80vw] text-center mx-auto my-[6vh]">
+        <h1 class="text-3xl font-bold ">
             Mes albums
         </h1>
 
-        <a href="create-album.php">Créer un album</a>
+        <a href="create-album.php" class="text-[#E40B18]">Créer un album</a>
     </div>
+
+    <?php
+        if (isset($_GET['status']) && $_GET['status'] == 'sucess') { ?>
+            <h3 class="text-center w-full mb-[2vh]">Album partagé...</h3>
+        <?php } else { ?>
+            <h3 class="text-center w-full mb-[2vh]">Erreur interne, veuillez réessayer...</h3>
+        <?php }
+    ?>
     
-    <div class="mt-[316px] w-[216px] m-auto flex flex-col">
+    <div class="grid grid-cols-cards flow-dense w-[80vw] mx-auto gap-10 items-start place-items-center">
         <?php
-            $connection = new Connection();
             $result = $connection->getAllAlbums($_SESSION['user_id']);
 
             if ($result) {
                 foreach ($result as $album) { ?>
-                    <a class="w-auto h-[72px] rounded-[6px] bg-red-btn text-white text-3xl mt-[16px] flex items-center justify-center" href="view-album.php?album-id=<?= $album['id']?>" ><?= $album['name'] ?></a>
-                    <?php if ($album['name'] !== 'Films visionés' && $album['name'] !== 'Films aimés') { ?>
-                        <form method="GET">
-                            <input type="hidden" name="album-id" value="<?= $album['id'] ?>">
-                            <button type="submit">Partager l'album</button>
-                        </form>
-                    <?php }
-                }
+                    <div class="w-[250px] flex flex-col justify-center gap-2 items-center">
+                        <a class="w-full h-[72px] rounded-[6px] bg-red-btn text-white text-3xl flex items-center justify-center" href="view-album.php?album-id=<?= $album['id'] ?>&album-name=<?= $album['name'] ?>"><?= $album['name'] ?></a>
+                        <?php if ($album['name'] !== 'Films visionés' && $album['name'] !== 'Ma liste') { ?>
+                            <form method="GET">
+                                <input type="hidden" name="album-id" value="<?= $album['id'] ?>">
+                                <input type="hidden" name="album-name" value="<?= $album['name'] ?>">
+                                <button type="submit" class="w-full text-center underline">Partager l'album</button>
+                            </form>
+                        <?php } ?>
+                    </div>
+                <?php }
             }
         ?>
     </div>
-    
-    <aside>
         <?php if (isset($_GET['album-id'])) {
             $share = $connection->getUsers();
 
-            foreach ($share as $user) {
-                if ($user['pseudo'] !== $_SESSION['user_name']) { ?>
-                    <form method="POST">
-                        <input type="hidden" name="share-id" value="<?= $user['id'] ?>">
-                        <button type="submit"> <?= $user['pseudo'] ?></button>
-                    </form>
-                <?php }
-            }
-
-            if (isset($_POST['share-id'])) {
-                $send = $connection->sendMessage($_SESSION['user_name'], $_GET['album-id'], $_GET['album-name'], $_POST['share-id']);
-
-                if ($send) {
-                    echo '<h2>Album partagé...</h2>';
-                } else {
-                    echo '<h2>Erreur interne veuillez réessayer...</h2>';
+            echo '<div class="fixed top-[10vh] left-0 bg-[#121212] h-[90vh] w-[100vw] flex flex-col items-center py-[50px] gap-[20px] bg-opacity-[0.9]">';
+                foreach ($share as $user) {
+                    if ($user['pseudo'] !== $_SESSION['user_name']) { ?>
+                        <form method="POST">
+                            <input type="hidden" name="share-id" value="<?= $user['id'] ?>">
+                            <button type="submit" class="w-[300px] bg-[#E40B18] py-2 font-bold rounded"><?= $user['pseudo'] ?></button>
+                        </form>
+                    <?php }
                 }
-
-            }
+            echo '</div>';
         } ?>
-    </aside>
 </body>
 </html>

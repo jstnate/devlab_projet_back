@@ -31,39 +31,12 @@
 
 <body class="w-auto bg-[url('./img/bg_film.jpeg')] bg-cover">
 
-    <header class="fixed top-0 left-0 w-screen bg-[#121212] flex p-[1em] justify-between items-center h-[10vh]">
-        <img src="img/Flouflix.png" alt="Logo Flouflix">
-        <div class="hover:cursor-pointer">
-            <div class="flex flex-col gap-[10px]" id="burger-btn">
-                <hr class="bg-white h-[4px] w-[40px] rounded">
-                <hr class="bg-white h-[4px] w-[40px] rounded">
-                <hr class="bg-white h-[4px] w-[40px] rounded">
-            </div>
-            <ul id="menu" class="absolute h-screen bg-[#121212] w-screen right-0 top-[10vh] flex flex-col items-center py-[10vh] z-[-1] opacity-0 scale-y-0 bg-opacity-90 gap-[20px] text-xl text-bold duration-300 origin-top">
-                <li><a href="index.php" class="hover:text-[#e40b18]">Accueil</a></li>
-                <li><a href="my-albums.php" class="hover:text-[#e40b18]">Mes albums</a></li>
-                <li><a href="my-messages.php" class="hover:text-[#e40b18]">Mes messages</a></li>
-                <li>
-                    <form  class="" method="POST">
-                        <input type="hidden" name="disconnect">
-                        <button type="submit" class="hover:text-[#e40b18]">Se déconnecter</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-        <?php
-            if (isset($_POST['disconnect'])) {
-                $connection = new Connection();
-                $disconnect = $connection->disconnect();
-                if ($disconnect) {
-                    header('Location: login.php');
-                }
-            }
-        ?>
-    </header>   
+    <header class="h-[60px] w-full flex items-center p-[16px] bg-gradient-to-t from-grey-header to-black-header">
+        <img class="h-[131px] h-[24px] mr-[16px]" src="./img/Flouflix.png" alt="Logo 'Flouflix'">
+    </header>
 
-    <div class="form w-[324px] h-[548px] bg-black/80 bg-opacity-55 m-auto mt-[140px] p-[16px]">
-        <h1 class="text-white text-3xl font-bold mt-[24px]">Créez un compte !</h1>
+    <div class="form w-[350px] h-[600px] bg-black/80 bg-opacity-55 m-auto mt-[100px] p-[16px] md:w-[450px]">
+        <h1 class="text-white text-3xl font-bold mt-[24px] text-center">Créez un compte !</h1>
 
         <form class="mt-[24px] flex flex-col items-center gap-[16px]" method="POST">
             <div class="civilite">
@@ -84,6 +57,8 @@
 
             <button class="w-[172px] h-[48px] rounded-[6px] bg-red-btn text-white mt-[16px]" type="submit"><a href="index.php">S'inscrire</a></button>
         </form>
+
+        <p class="text-white mt-8 w-full text-center">Déja un compte chez Flouflix ? <a href="login.php">Connectez-vous</a></p>
 
     </div>
 
