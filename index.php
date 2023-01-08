@@ -7,6 +7,43 @@
     if (!isset($_SESSION['user_id'])) {
         header('Location: login.php');
     }
+
+    if (isset($_POST['albumId'])) {
+        if (isset($_GET['film-id'])) {
+            $film = $_GET['film-id'];
+        }
+        $album = $_POST['albumId'];
+        $connection = new Connection();
+        $result = $connection->insertFilm($film, $album);
+        
+        if ($result) {
+            header('Location: index.php');
+        }
+    }
+
+    if (isset($_POST['liked-mark'])) {
+        print_r('caca');
+        $connection = new Connection();
+        $id = $_POST['film-id'];
+        $insert = $connection->insertFilm($id, $_SESSION['liked']);
+    }
+
+    if (isset($_POST['watched-mark'])) {
+        $connection = new Connection();
+        $id = $_POST['film-id'];
+        $insert = $connection->insertFilm($id, $_SESSION['watched']);
+    }
+
+
+    if (isset($_POST['disconnect'])) {
+        $connection = new Connection();
+        $disconnect = $connection->disconnect();
+
+        if ($disconnect) {
+            header('Location: login.php');
+        }
+    }
+
 ?>
 
 <!doctype html>
@@ -28,6 +65,7 @@
                 }
             }
         </script>
+        <script src="./public/js/burger.js" defer></script>
         <script src="./public/js/main.js" defer></script>
         <script src="./public/js/search.js" defer></script>
         <title>Document</title>
@@ -54,21 +92,10 @@
                 </li>
             </ul>
         </div>
-
-        <?php
-            if (isset($_POST['disconnect'])) {
-                $connection = new Connection();
-                $disconnect = $connection->disconnect();
-
-                if ($disconnect) {
-                    header('Location: login.php');
-                }
-            }
-        ?>
     </header>
 
     <div class="w-[100vw] flex flex-col justify-center gap-[20px] my-[25px]">
-        <form class="flex w-[80vw] m-auto justify-between items-center" method="POST">
+        <form class="flex w-[80vw] m-auto justify-between items-center md:w-[40vw]" method="POST">
             <input type="text" name="username" id="user-search" placeholder="Rechercher un utilisateur..." class="p-[5px] rounded text-black w-[100%]">
             <button type="submit"></button>
         </form>
@@ -78,13 +105,13 @@
             $search = $connection->getUserByName($_POST['username']);
             if ($search) {
                 foreach ($search as $user) { ?>
-                    <a href="view-profil.php?user-id=<?= $user['id'] ?>" class="w-[100%] text-center text-xl text-bold"> <?= $user['pseudo'] ?></a>
+                    <a href="view-profil.php?user-id=<?= $user['id'] ?>" class="w-[100%] text-center text-xl text-bold hover:text-[#E40B18]"> <?= $user['pseudo'] ?></a>
                 <?php }
             }
         }?>
     </div>
 
-    <form class="flex w-[80vw] m-auto justify-between items-center" method="POST">
+    <form class="flex w-[80vw] m-auto justify-between items-center md:w-[40vw]" method="POST">
         <input type="text" id="film-search" placeholder="Rechercher un film..." class="p-[5px] rounded text-black w-[100%]">
         <button type="submit"></button>
     </form>
@@ -106,7 +133,7 @@
         <p>Les films sont triés par : <span id="sort-infos">Popularité décroissante</span></p>
     </div>
 
-    <section id="list" class="grid grid-cols-cards grid-flow-dense gap-x-[25px] gap-y-[50px] my-[50px] place-items-center mx-auto">
+    <section id="list" class="grid grid-cols-cards grid-flow-dense gap-x-[25px] gap-y-[50px] my-[50px] place-items-center mx-auto md:w-[90vw]">
 
     </section>
 
@@ -121,7 +148,7 @@
             $list = $connection->getAllAlbums($_SESSION['user_id']);
             ?>
 
-            <div class="absolute top-[10vh] left-0 bg-[#121212] h-[90vh] w-[100vw] flex flex-col items-center py-[50px] gap-[20px] bg-opacity-[0.9]">
+            <div class="fixed top-[10vh] left-0 bg-[#121212] h-[90vh] w-[100vw] flex flex-col items-center py-[50px] gap-[20px] bg-opacity-[0.9]">
                 <?php foreach ($list as $myAlbum) { ?>
                     <form class="w-full flex justify-center items-center" id="show-album" method="POST">
                         <input type="hidden" name="albumId" value="<?= $myAlbum['id'] ?>">
@@ -129,35 +156,6 @@
                     </form>
                 <?php } ?>
             </div>
-        <?php }
-
-        if (isset($_POST['albumId'])) {
-            if (isset($_GET['film-id'])) {
-                $film = $_GET['film-id'];
-            }
-            $album = $_POST['albumId'];
-            $connection = new Connection();
-            $result = $connection->insertFilm($film, $album);
-
-            if ($result) {
-                echo "Film ajouté à l'album";
-            } else {
-                "Echec";
-            }
-        }
-
-        if (isset($_POST['liked-mark'])) {
-            print_r('caca');
-            $connection = new Connection();
-            $id = $_POST['film-id'];
-            $insert = $connection->insertFilm($id, $_SESSION['liked']);
-        }
-
-        if (isset($_POST['watched-mark'])) {
-            $connection = new Connection();
-            $id = $_POST['film-id'];
-            $insert = $connection->insertFilm($id, $_SESSION['watched']);
-        }
-    ?>
+        <?php } ?>
 </body>
 </html>

@@ -4,17 +4,17 @@ let currentPage = 1
 let genrePage = 1
 let minCount = 0
 let maxCount = 20
-let btn = document.getElementById('btn')
 let genre = document.getElementById('genre')
 let selectedGenre = 'null'
 let sort = 'popularity.desc'
-let burger = document.getElementById('burger-btn')
-let menu = document.getElementById('menu')
 
-
+console.log(currentPage)
+console.log(genrePage)
 
 window.onload = getFilters()
+window.onload = getFilm(0, 20)
 
+// On filters submit, get movies, sort them and reset page values
 document.getElementById('filters').onsubmit = (e) => {
     e.preventDefault();
     document.getElementById('sort-tag').style.display = 'flex'
@@ -25,40 +25,12 @@ document.getElementById('filters').onsubmit = (e) => {
     getFilm(0, 20)
 }
 
-btn.addEventListener('click', getFilm(minCount, maxCount))
-
-burger.addEventListener('click', () => {
-    if (menu.classList.contains('z-[-1]') && menu.classList.contains('opacity-0')) {
-        menu.classList.remove('z-[-1]')
-        menu.classList.remove('opacity-0')
-        menu.classList.remove('scale-y-0')
-        menu.classList.add('z-1')
-        menu.classList.add('opacity-1')
-        menu.classList.add('scale-y-1')
-    } else {
-        menu.classList.remove('z-1')
-        menu.classList.remove('opacity-1')
-        menu.classList.remove('scale-x-1')
-        menu.classList.add('z-[-1]')
-        menu.classList.add('opacity-0')
-        menu.classList.add('scale-y-0')
-    }
-})
-
-menu.addEventListener('click', () => {
-    menu.classList.remove('z-1')
-        menu.classList.remove('opacity-1')
-        menu.classList.remove('scale-y-1')
-        menu.classList.add('z-[-1]')
-        menu.classList.add('opacity-0')
-        menu.classList.add('scale-y-0')
-})
-
-// Show film
+// Call api with condition if a filter is selected
 async function getFilm(min, max) {
     list.innerHTML = ''
     for (let i = min; i < max; i++) {
         if (selectedGenre === 'null') {
+            // Basic api call
             await fetch('https://api.themoviedb.org/3/movie/' + i + '?api_key=051277f4f78b500821fed3e0e4d59bf4&language=en=US')
                 .then(async result => await result.json())
                 .then(data => {
@@ -70,6 +42,7 @@ async function getFilm(min, max) {
                     }
                 })
         } else {
+            // API call by filters
             await fetch('https://api.themoviedb.org/3/discover/movie?api_key=051277f4f78b500821fed3e0e4d59bf4&language=en-US&sort_by=' + sort + '&include_adult=false&include_video=false&page=' + genrePage + '&with_genres=' + selectedGenre + '&with_watch_monetization_types=flatrate')
                 .then(async result => await result.json())
                 .then(data => {
@@ -80,11 +53,14 @@ async function getFilm(min, max) {
     }
 }
 
+// Show film infos
 function showFilm(data) {
+    // Create film div
     let film = document.createElement('div')
     film.id = data.id
     film.classList.add('w-[250px]', 'flex', 'flex-col', 'items-center', 'justify-between', 'gap-[20px]', 'h-[600px]',)
 
+    // Add poster of the film
     let img = document.createElement('img')
     if (data.poster_path === null) {
         img.src = 'img/room.jpeg'
@@ -95,12 +71,14 @@ function showFilm(data) {
 
     film.appendChild(img)
 
+    // Add title of the film
     let h2 = document.createElement('h2')
     h2.innerHTML = data.title
-    h2.classList.add('text-3xl', 'text-center')
+    h2.classList.add('text-3xl', 'text-center', 'font-bold')
 
     film.appendChild(h2)
 
+    // Add link to see all movie infos
     let a = document.createElement('a')
     a.classList.add('hover:text-[#e40b18]')
     a.innerHTML = 'Voir le film'
@@ -108,10 +86,11 @@ function showFilm(data) {
 
     film.appendChild(a)
 
+    // Add div of action buttons
     let buttonDiv = document.createElement('div')
     buttonDiv.classList.add('flex', 'gap-[30px]')
 
-    // Add to liked films button
+    // Add to "Ma liste" button
     let addToLiked = document.createElement('form')
     let likedId = document.createElement('input')
     let addLiked = document.createElement('button')
@@ -131,7 +110,7 @@ function showFilm(data) {
 
     buttonDiv.appendChild(addToLiked)
 
-    // Add to watched films button
+    // Add to "Films visionés" button
     let addToWatched = document.createElement('form')
     let addWatched = document.createElement('button')
     let watchedId = document.createElement('input')
@@ -169,10 +148,14 @@ function showFilm(data) {
     buttonDiv.appendChild(addToAlbum)
 
     film.appendChild(buttonDiv)
+
+    // Insert film div in html
     list.appendChild(film)
 }
 // Create option for each movie genre
 let filters = document.getElementById('genre')
+
+// Get movies genre from API
 async function getFilters() {
     await fetch('https://api.themoviedb.org/3/genre/movie/list?api_key=051277f4f78b500821fed3e0e4d59bf4&language=en=US')
         .then(result => result.json())
@@ -204,7 +187,7 @@ pagePlus.addEventListener('click', () => {
     }
 })
 pageMinus.addEventListener('click', () => {
-    if (currentPage > 1 && genrePage > 1) {
+    if (currentPage > 1 || genrePage > 1) {
         if (selectedGenre === 'null') {
             currentPage -= 1
             minCount = (currentPage - 1) * 20
@@ -217,6 +200,7 @@ pageMinus.addEventListener('click', () => {
     }
 })
 
+// Function to sort movies if filter is set
 let sortButton = document.querySelectorAll('#tag')
 sortButton.forEach((button) => {
     button.addEventListener('click', () => {

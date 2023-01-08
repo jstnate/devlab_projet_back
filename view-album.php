@@ -7,6 +7,14 @@
     if (!isset($_SESSION['user_id'])) {
         header('Location: login.php');
     }
+
+    if (isset($_POST['delete'])) {
+        $connection = new Connection();
+        $albumId = $_GET['album-id'];
+        $filmId = $_POST['film-id'];
+        $request = $connection->removeFilm($filmId, $albumId);
+        header("Refresh:0");
+    }
 ?>
 
 <!doctype html>
@@ -60,14 +68,6 @@
                         })
                 </script>
             <?php }
-
-            if (isset($_POST['delete'])) {
-                $connection = new Connection();
-                $albumId = $_GET['album-id'];
-                $filmId = $_POST['film-id'];
-                $request = $connection->removeFilm($filmId, $albumId);
-                header("Refresh:0");
-            }
         }
     ?>
 </body>
