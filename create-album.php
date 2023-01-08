@@ -42,7 +42,7 @@
         }
     </script>
     <script src="./public/js/burger.js" defer></script>
-    <title>Document</title>
+    <title>Créer un album</title>
 </head>
 <body class="bg-[#121212] text-white py-[10vh] relative z-0 overflow-hidden">
     <header class="fixed top-0 left-0 w-screen bg-[#121212] flex p-[1em] justify-between items-center h-[10vh] md:px-[9em]">

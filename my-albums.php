@@ -24,7 +24,21 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'black-header': '#080808',
+            'grey-header': '#121212',
+            'red-btn': '#e40b18'
+          }
+        }
+      }
+    }
+    </script>
+    <title>Mes albums</title>
 </head>
 <body class="bg-[#121212] text-white py-[10vh] relative z-0">
     <header class="fixed top-0 left-0 w-screen bg-[#121212] flex p-[1em] justify-between items-center h-[10vh] md:px-[9em]">
@@ -56,23 +70,26 @@
 
         <a href="create-album.php">Créer un album</a>
     </div>
-    <?php
-        $connection = new Connection();
-        $result = $connection->getAllAlbums($_SESSION['user_id']);
+    
+    <div class="mt-[316px] w-[216px] m-auto flex flex-col">
+        <?php
+            $connection = new Connection();
+            $result = $connection->getAllAlbums($_SESSION['user_id']);
 
-        if ($result) {
-            foreach ($result as $album) { ?>
-                <a href="view-album.php?album-id=<?= $album['id']?>&album-name=<?= $album['name']?>" ><?= $album['name'] ?></a>
-                <?php if ($album['name'] !== 'Films visionés' && $album['name'] !== 'Ma liste') { ?>
-                    <form method="GET">
-                        <input type="hidden" name="album-id" value="<?= $album['id'] ?>">
-                        <input type="hidden" name="album-name" value="<?= $album['name'] ?>">
-                        <button type="submit">Partager l'album</button>
-                    </form>
-                <?php }
+            if ($result) {
+                foreach ($result as $album) { ?>
+                    <a class="w-auto h-[72px] rounded-[6px] bg-red-btn text-white text-3xl mt-[16px] flex items-center justify-center" href="view-album.php?album-id=<?= $album['id']?>" ><?= $album['name'] ?></a>
+                    <?php if ($album['name'] !== 'Films visionés' && $album['name'] !== 'Films aimés') { ?>
+                        <form method="GET">
+                            <input type="hidden" name="album-id" value="<?= $album['id'] ?>">
+                            <button type="submit">Partager l'album</button>
+                        </form>
+                    <?php }
+                }
             }
-        }
-    ?>
+        ?>
+    </div>
+    
     <aside>
         <?php if (isset($_GET['album-id'])) {
             $share = $connection->getUsers();
