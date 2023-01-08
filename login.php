@@ -25,7 +25,7 @@
       }
     }
     </script>
-    <title>Document</title>
+    <title>Flouflix - Connexion</title>
 </head>
 
 <header class="h-[60px] w-full flex items-center p-[16px] bg-gradient-to-t from-grey-header to-black-header">

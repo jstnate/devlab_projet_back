@@ -24,7 +24,7 @@
       }
     }
     </script>
-    <title>Créer un compte</title>
+    <title>Flouflix - Inscription</title>
 </head>
 
 
