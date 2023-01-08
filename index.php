@@ -60,11 +60,15 @@
                     extend: {
                         gridTemplateColumns: {
                             'cards': 'repeat(auto-fit, minmax(250px, 1fr))'
+                        },
+                        aspectRatio: {
+                            '11/16': '11/16'
                         }
                     }
                 }
             }
         </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js" integrity="sha512-QTnb9BQkG4fBYIt9JGvYmxPpd6TBeKp6lsUrtiVQsrJ9sb33Bn9s0wMQO9qVBFbPX3xHRAsBHvXlcsrnJjExjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="./public/js/burger.js" defer></script>
         <script src="./public/js/main.js" defer></script>
         <script src="./public/js/search.js" defer></script>
@@ -72,7 +76,7 @@
     </head>
 <body class="bg-[#121212] text-white py-[10vh] relative z-0">
 
-    <header class="fixed top-0 left-0 w-screen bg-[#121212] flex p-[1em] justify-between items-center h-[10vh]">
+    <header class="fixed top-0 left-0 w-screen bg-[#121212] flex p-[1em] justify-between items-center h-[10vh] md:px-[9em]"">
         <img src="img/Flouflix.png" alt="Logo Flouflix">
         <div class="hover:cursor-pointer">
             <div class="flex flex-col gap-[10px]" id="burger-btn">

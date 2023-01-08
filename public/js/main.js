@@ -8,9 +8,6 @@ let genre = document.getElementById('genre')
 let selectedGenre = 'null'
 let sort = 'popularity.desc'
 
-console.log(currentPage)
-console.log(genrePage)
-
 window.onload = getFilters()
 window.onload = getFilm(0, 20)
 
@@ -67,7 +64,7 @@ function showFilm(data) {
     } else {
         img.src = 'https://image.tmdb.org/t/p/w500' + data.poster_path
     }
-    img.classList.add('w-full', 'object-fill', 'h-[350px]')
+    img.classList.add('w-full', 'object-fill', 'aspect-11/16')
 
     film.appendChild(img)
 
