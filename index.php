@@ -59,7 +59,8 @@
                 theme: {
                     extend: {
                         gridTemplateColumns: {
-                            'cards': 'repeat(auto-fit, minmax(250px, 1fr))'
+                            'cards': 'repeat(auto-fit, minmax(250px, 1fr))',
+                            'user': 'repeat(auto-fit, minmax(150px, 1fr))'
                         },
                         aspectRatio: {
                             '11/16': '11/16'
@@ -72,7 +73,7 @@
         <script src="./public/js/burger.js" defer></script>
         <script src="./public/js/main.js" defer></script>
         <script src="./public/js/search.js" defer></script>
-        <title>Document</title>
+        <title>Flouflix - Accueil</title>
     </head>
 <body class="bg-[#121212] text-white py-[10vh] relative z-0">
 
@@ -98,7 +99,7 @@
         </div>
     </header>
 
-    <div class="w-[100vw] flex flex-col justify-center gap-[20px] my-[25px]">
+    <div class="w-[80vw] flex flex-col justify-center gap-[20px] my-[25px] mx-auto">
         <form class="flex w-[80vw] m-auto justify-between items-center md:w-[40vw]" method="POST">
             <input type="text" name="username" id="user-search" placeholder="Rechercher un utilisateur..." class="p-[5px] rounded text-black w-[100%]">
             <button type="submit"></button>
@@ -107,12 +108,15 @@
         <?php if (isset($_POST['username'])) {
             $connection = new Connection();
             $search = $connection->getUserByName($_POST['username']);
-            if ($search) {
-                foreach ($search as $user) { ?>
-                    <a href="view-profil.php?user-id=<?= $user['id'] ?>" class="w-[100%] text-center text-xl text-bold hover:text-[#E40B18]"> <?= $user['pseudo'] ?></a>
-                <?php }
-            }
-        }?>
+            ?>
+            <div class="grid grid-cols-user flow-dense w-[80vw] md:w-[40vw] mx-auto place-items-center gap-10">
+                <?php if ($search) {
+                    foreach ($search as $user) { ?>
+                        <a href="view-profil.php?user-id=<?= $user['id'] ?>" class="w-[100%] text-center text-xl text-bold hover:text-[#E40B18]"> <?= $user['pseudo'] ?></a>
+                    <?php }
+                } ?>
+            </div>
+        <?php }?>
     </div>
 
     <form class="flex w-[80vw] m-auto justify-between items-center md:w-[40vw]" method="POST">

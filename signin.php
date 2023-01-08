@@ -10,7 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Créer un compte</title>
+    <title>Flouflix - Inscription</title>
 </head>
 <body>
     <div class="form">
@@ -20,23 +20,23 @@
             <div class="civilite">
                 <div class="fname">
                     <label for="firstname">Prénom</label>
-                    <input type="text" name="firstname" placeholder="John">
+                    <input type="text" name="firstname" placeholder="John" required>
                 </div>
 
                 <div class="lname">
                     <label for="lastname">Nom</label>
-                    <input type="text" name="lastname" placeholder="Doe">
+                    <input type="text" name="lastname" placeholder="Doe" required>
                 </div>
             </div>
 
             <label for="pseudo">Pseudo</label>
-            <input type="text" name="pseudo" placeholder="Pseudonyme">
+            <input type="text" name="pseudo" placeholder="Pseudonyme" required>
 
             <label for="email">Email</label>
-            <input type="email" name="email" placeholder="mail@gmail.com">
+            <input type="email" name="email" placeholder="mail@gmail.com" required>
 
             <label for="password">Mot de passe</label>
-            <input type="password" name="password" placeholder="Entrer votre mot de passe">
+            <input type="password" name="password" placeholder="Entrer votre mot de passe" required>
 
             <button type="submit">S'inscrire</button>
         </form>
