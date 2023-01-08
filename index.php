@@ -18,6 +18,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <script src="./public/js/main.js" defer></script>
         <script src="./public/js/search.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js" integrity="sha512-QTnb9BQkG4fBYIt9JGvYmxPpd6TBeKp6lsUrtiVQsrJ9sb33Bn9s0wMQO9qVBFbPX3xHRAsBHvXlcsrnJjExjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <title>Document</title>
     </head>
 <body>
@@ -25,7 +26,6 @@
     <form method="POST">
         <label for="film-search">Quel filme recherchez-vous ?</label>
         <input type="text" id="film-search">
-        <button type="submit">Rechercher</button>
     </form>
 
     <?= $_SESSION['user_id'] . $_SESSION['user_name']?>
