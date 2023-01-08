@@ -13,69 +13,123 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="public/css/style.css">
+        <script src="https://kit.fontawesome.com/b050931f68.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        gridTemplateColumns: {
+                            'cards': 'repeat(auto-fit, minmax(250px, 1fr))'
+                        }
+                    }
+                }
+            }
+        </script>
         <script src="./public/js/main.js" defer></script>
+        <script src="./public/js/search.js" defer></script>
         <title>Document</title>
     </head>
-<body>
+<body class="bg-[#121212] text-white py-[10vh] relative z-0">
 
-    <?= $_SESSION['user_id'] . $_SESSION['user_name']?>
-    <aside>
-        <nav>
-            <form method="POST">
-                <label for="user-search">Qui recherchez-vous ?</label>
-                <input type="text" name="username" id="user-search">
-                <button type="submit">Rechercher</button>
-            </form>
-        </nav>
+    <header class="fixed top-0 left-0 w-screen bg-[#121212] flex p-[1em] justify-between items-center h-[10vh]">
+        <img src="img/Flouflix.png" alt="Logo Flouflix">
+        <div class="hover:cursor-pointer">
+            <div class="flex flex-col gap-[10px]" id="burger-btn">
+                <hr class="bg-white h-[4px] w-[40px] rounded">
+                <hr class="bg-white h-[4px] w-[40px] rounded">
+                <hr class="bg-white h-[4px] w-[40px] rounded">
+            </div>
+            <ul id="menu" class="absolute h-screen bg-[#121212] w-screen right-0 top-[10vh] flex flex-col items-center py-[10vh] z-[-1] opacity-0 scale-y-0 bg-opacity-90 gap-[20px] text-xl text-bold duration-300 origin-top">
+                <li><a href="index.php" class="hover:text-[#e40b18]">Accueil</a></li>
+                <li><a href="my-albums.php" class="hover:text-[#e40b18]">Mes albums</a></li>
+                <li><a href="my-messages.php" class="hover:text-[#e40b18]">Mes messages</a></li>
+                <li>
+                    <form  class="" method="POST">
+                        <input type="hidden" name="disconnect">
+                        <button type="submit" class="hover:text-[#e40b18]">Se déconnecter</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <?php
+            if (isset($_POST['disconnect'])) {
+                $connection = new Connection();
+                $disconnect = $connection->disconnect();
+
+                if ($disconnect) {
+                    header('Location: login.php');
+                }
+            }
+        ?>
+    </header>
+
+    <div class="w-[100vw] flex flex-col justify-center gap-[20px] my-[25px]">
+        <form class="flex w-[80vw] m-auto justify-between items-center" method="POST">
+            <input type="text" name="username" id="user-search" placeholder="Rechercher un utilisateur..." class="p-[5px] rounded text-black w-[100%]">
+            <button type="submit"></button>
+        </form>
 
         <?php if (isset($_POST['username'])) {
             $connection = new Connection();
             $search = $connection->getUserByName($_POST['username']);
             if ($search) {
                 foreach ($search as $user) { ?>
-                    <a href="view-profil.php?user-id=<?= $user['id'] ?>"> <?= $user['pseudo'] ?></a>
+                    <a href="view-profil.php?user-id=<?= $user['id'] ?>" class="w-[100%] text-center text-xl text-bold"> <?= $user['pseudo'] ?></a>
                 <?php }
             }
         }?>
-    </aside>
+    </div>
 
-    <form id="filters" method="POST">
-        <select name="genre" id="genre">
-            <option value="null">Select genre</option>
-        </select>
-        <button type="submit" id="btn">Submit</button>
+    <form class="flex w-[80vw] m-auto justify-between items-center" method="POST">
+        <input type="text" id="film-search" placeholder="Rechercher un film..." class="p-[5px] rounded text-black w-[100%]">
+        <button type="submit"></button>
     </form>
 
-    <div id="sort-tag" style="display: none">
-        <button id="tag" value="original_title.desc">Trier par nom</button>
-        <button id="tag" value="vote_average.desc">Trier par avis</button>
-        <button id="tag" value="popularity.desc">Trier par popularité</button>
+    <form id="filters"  class="flex items-center justify-center gap-[10px] my-[25px]" method="POST">
+        <select name="genre" id="genre" class="text-black w-[150px] h-[30px]">
+            <option value="null">Genres</option>
+        </select>
+        <button type="submit" id="btn" class="text-black bg-[#e40b18] h-[30px] w-[50px] text-bold text-xl hover:text-white">Go</button>
+    </form>
+
+    <div class="w-full flex-col items-center justify-center gap-[10px]" id="sort-tag" style="display: none">
+        <div class="w-full flex items-center justify-center gap-[5px]">
+            <button class="px-[0.5em] py-[0.5em] bg-[#e40b18] text-white hover:cursor-pointer" id="tag" value="original_title.desc">Trier par nom</button>
+            <button class="px-[0.5em] py-[0.5em] bg-[#e40b18] text-white hover:cursor-pointer" id="tag" value="vote_average.desc">Trier par avis</button>
+            <button class="px-[0.5em] py-[0.5em] bg-[#e40b18] text-white hover:cursor-pointer" id="tag" value="popularity.desc">Trier par popularité</button>
+        </div>
+        
         <p>Les films sont triés par : <span id="sort-infos">Popularité décroissante</span></p>
     </div>
 
-    <section id="list">
+    <section id="list" class="grid grid-cols-cards grid-flow-dense gap-x-[25px] gap-y-[50px] my-[50px] place-items-center mx-auto">
 
     </section>
-    <span id="page-minus">Prev Page</span>
-    <span id="page-plus">Next Page</span>
+
+    <div class="flex items-center justify-center mx-auto my-[50px] gap-[10px]">
+        <span id="page-minus"><i class="fa-solid fa-chevron-left px-[2em] py-[1em] bg-[#e40b18] hover:cursor-pointer"></i></span>
+        <span id="page-plus"><i class="fa-solid fa-chevron-right px-[2em] py-[1em] bg-[#e40b18] hover:cursor-pointer"></i></span>
+    </div>
 
     <?php
         if (isset($_GET['film-id'])) {
             $connection = new Connection();
             $list = $connection->getAllAlbums($_SESSION['user_id']);
+            ?>
 
-            foreach ($list as $myAlbum) { ?>
-                <form id="show-album" method="POST">
-                    <input type="hidden" name="albumId" value="<?= $myAlbum['id'] ?>">
-                    <button type="submit"><?= $myAlbum['name'] ?></button>
-                </form>
-            <?php }
-
-        }
+            <div class="absolute top-[10vh] left-0 bg-[#121212] h-[90vh] w-[100vw] flex flex-col items-center py-[50px] gap-[20px] bg-opacity-[0.9]">
+                <?php foreach ($list as $myAlbum) { ?>
+                    <form class="w-full flex justify-center items-center" id="show-album" method="POST">
+                        <input type="hidden" name="albumId" value="<?= $myAlbum['id'] ?>">
+                        <button type="submit" class="w-[50%] h-[50px] bg-[#e40b18]"><?= $myAlbum['name'] ?></button>
+                    </form>
+                <?php } ?>
+            </div>
+        <?php }
 
         if (isset($_POST['albumId'])) {
             if (isset($_GET['film-id'])) {
@@ -93,6 +147,7 @@
         }
 
         if (isset($_POST['liked-mark'])) {
+            print_r('caca');
             $connection = new Connection();
             $id = $_POST['film-id'];
             $insert = $connection->insertFilm($id, $_SESSION['liked']);

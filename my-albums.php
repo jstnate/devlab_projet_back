@@ -26,7 +26,7 @@
         if ($result) {
             foreach ($result as $album) { ?>
                 <a href="view-album.php?album-id=<?= $album['id']?>" ><?= $album['name'] ?></a>
-                <?php if ($album['name'] !== 'Films visionés' && $album['name'] !== 'Films aimés') { ?>
+                <?php if ($album['name'] !== 'Films visionés' && $album['name'] !== 'Ma liste') { ?>
                     <form method="GET">
                         <input type="hidden" name="album-id" value="<?= $album['id'] ?>">
                         <input type="hidden" name="album-name" value="<?= $album['name'] ?>">

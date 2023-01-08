@@ -33,7 +33,7 @@
                 <h2>Ses albums :</h2>
                 <?php foreach ($result as $album) { ?>
                     <a href="view-album.php?album-id=<?= $album['id']?>" ><?= $album['name'] ?></a>
-                    <?php if ($album['name'] !== 'Films visionés' && $album['name'] !== 'Films aimés') { ?>
+                    <?php if ($album['name'] !== 'Films visionés' && $album['name'] !== 'Ma liste') { ?>
                         <form method="POST">
                             <input type="hidden" name="album-id" value="<?= $album['id']?>">
                             <button type="submit">Aimer l'album</button>
@@ -47,7 +47,7 @@
                 <h2>Ses albums likés :</h2>
                 <?php foreach ($likes as $like) { ?>
                     <a href="view-album.php?album-id=<?= $like['id']?>" ><?= $like['name'] ?></a>
-                    <?php if ($like['name'] !== 'Films visionés' && $like['name'] !== 'Films aimés') { ?>
+                    <?php if ($like['name'] !== 'Films visionés' && $like['name'] !== 'Ma liste') { ?>
                         <form method="POST">
                             <input type="hidden" name="album-id" value="<?= $like['id']?>">
                             <button type="submit">Aimer l'album</button>

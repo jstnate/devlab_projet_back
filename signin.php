@@ -59,7 +59,7 @@
                 $insert = $connection->insertUser($user);
 
                 $liked_album = new Album(
-                    'Films aimés',
+                    'Ma liste',
                     0
                 );
 
@@ -74,7 +74,7 @@
                     $_SESSION['user_name'] = $request['pseudo'];
                     $liked = $connection->createAlbum($liked_album);
                     $visioned = $connection->createAlbum($visioned_album);
-                    $getLiked = $connection->getAlbum('Films Aimés');
+                    $getLiked = $connection->getAlbum('Ma liste');
                     $getWatched = $connection->getAlbum('Films visionés');
                     $_SESSION['liked'] = $getLiked['id'];
                     $_SESSION['watched'] = $getWatched['id'];

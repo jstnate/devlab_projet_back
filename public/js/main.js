@@ -8,6 +8,8 @@ let btn = document.getElementById('btn')
 let genre = document.getElementById('genre')
 let selectedGenre = 'null'
 let sort = 'popularity.desc'
+let burger = document.getElementById('burger-btn')
+let menu = document.getElementById('menu')
 
 
 
@@ -15,7 +17,7 @@ window.onload = getFilters()
 
 document.getElementById('filters').onsubmit = (e) => {
     e.preventDefault();
-    document.getElementById('sort-tag').style.display = 'block'
+    document.getElementById('sort-tag').style.display = 'flex'
     sort = 'popularity.desc'
     genrePage = 1
     currentPage = 1
@@ -24,6 +26,33 @@ document.getElementById('filters').onsubmit = (e) => {
 }
 
 btn.addEventListener('click', getFilm(minCount, maxCount))
+
+burger.addEventListener('click', () => {
+    if (menu.classList.contains('z-[-1]') && menu.classList.contains('opacity-0')) {
+        menu.classList.remove('z-[-1]')
+        menu.classList.remove('opacity-0')
+        menu.classList.remove('scale-y-0')
+        menu.classList.add('z-1')
+        menu.classList.add('opacity-1')
+        menu.classList.add('scale-y-1')
+    } else {
+        menu.classList.remove('z-1')
+        menu.classList.remove('opacity-1')
+        menu.classList.remove('scale-x-1')
+        menu.classList.add('z-[-1]')
+        menu.classList.add('opacity-0')
+        menu.classList.add('scale-y-0')
+    }
+})
+
+menu.addEventListener('click', () => {
+    menu.classList.remove('z-1')
+        menu.classList.remove('opacity-1')
+        menu.classList.remove('scale-y-1')
+        menu.classList.add('z-[-1]')
+        menu.classList.add('opacity-0')
+        menu.classList.add('scale-y-0')
+})
 
 // Show film
 async function getFilm(min, max) {
@@ -54,26 +83,45 @@ async function getFilm(min, max) {
 function showFilm(data) {
     let film = document.createElement('div')
     film.id = data.id
-    // let img = document.createElement('img')
-    // img.src = 'https://image.tmdb.org/t/p/w500' + data.poster_path
-    let h1 = document.createElement('h1')
-    h1.innerHTML = data.title
-    h1.classList.add('text-red', 'text-3xl')
-    // let p = document.createElement('p')
-    // p.innerHTML = data.overview
+    film.classList.add('w-[250px]', 'flex', 'flex-col', 'items-center', 'justify-between', 'gap-[20px]', 'h-[600px]',)
+
+    let img = document.createElement('img')
+    if (data.poster_path === null) {
+        img.src = 'img/room.jpeg'
+    } else {
+        img.src = 'https://image.tmdb.org/t/p/w500' + data.poster_path
+    }
+    img.classList.add('w-full', 'object-fill', 'h-[350px]')
+
+    film.appendChild(img)
+
+    let h2 = document.createElement('h2')
+    h2.innerHTML = data.title
+    h2.classList.add('text-3xl', 'text-center')
+
+    film.appendChild(h2)
+
     let a = document.createElement('a')
+    a.classList.add('hover:text-[#e40b18]')
     a.innerHTML = 'Voir le film'
     a.href = 'movie.php?id=' + data.id + '&name=' + data.title
 
-    // Add to liked films
+    film.appendChild(a)
+
+    let buttonDiv = document.createElement('div')
+    buttonDiv.classList.add('flex', 'gap-[30px]')
+
+    // Add to liked films button
     let addToLiked = document.createElement('form')
     let likedId = document.createElement('input')
     let addLiked = document.createElement('button')
 
     addToLiked.method = 'POST'
+
     addLiked.type = 'submit'
     addLiked.name = 'liked-mark'
-    addLiked.innerHTML = 'Aimer'
+    addLiked.innerHTML = '<i class="fa-solid fa-heart text-2xl hover:text-[#e40b18]"></i>'
+
     likedId.value = data.id
     likedId.name = 'film-id'
     likedId.type = 'hidden'
@@ -81,15 +129,19 @@ function showFilm(data) {
     addToLiked.appendChild(likedId)
     addToLiked.appendChild(addLiked)
 
-    // Add to watched films
+    buttonDiv.appendChild(addToLiked)
+
+    // Add to watched films button
     let addToWatched = document.createElement('form')
     let addWatched = document.createElement('button')
     let watchedId = document.createElement('input')
 
     addToWatched.method = 'POST'
+
     addWatched.type = 'submit'
     addWatched.name = 'watched-mark'
-    addWatched.innerHTML = 'Visionner'
+    addWatched.innerHTML = '<i class="fa-solid fa-eye text-2xl hover:text-[#e40b18]"></i>'
+
     watchedId.value = data.id
     watchedId.name = 'film-id'
     watchedId.type = 'hidden'
@@ -97,14 +149,16 @@ function showFilm(data) {
     addToWatched.appendChild(watchedId)
     addToWatched.appendChild(addWatched)
 
-    // Add to specified album
+    buttonDiv.appendChild(addToWatched)
+
+    // Add to specified album button
     let addToAlbum = document.createElement('form')
     let button = document.createElement('button')
     let filmId = document.createElement('input')
 
     addToAlbum.method = 'GET'
     button.type = 'submit'
-    button.innerHTML = "Tout droit dans l'album"
+    button.innerHTML = '<i class="fa-solid fa-folder-plus text-2xl hover:text-[#e40b18]"></i>'
     filmId.value = data.id
     filmId.name = 'film-id'
     filmId.type = 'hidden'
@@ -112,13 +166,9 @@ function showFilm(data) {
     addToAlbum.appendChild(filmId)
     addToAlbum.appendChild(button)
 
-    // film.appendChild(img)
-    film.appendChild(h1)
-    // film.appendChild(p)
-    film.appendChild(a)
-    film.appendChild(addToLiked)
-    film.appendChild(addToWatched)
-    film.appendChild(addToAlbum)
+    buttonDiv.appendChild(addToAlbum)
+
+    film.appendChild(buttonDiv)
     list.appendChild(film)
 }
 // Create option for each movie genre
@@ -168,7 +218,6 @@ pageMinus.addEventListener('click', () => {
 })
 
 let sortButton = document.querySelectorAll('#tag')
-
 sortButton.forEach((button) => {
     button.addEventListener('click', () => {
         if (button.value === 'popularity.desc') {
@@ -190,7 +239,6 @@ sortButton.forEach((button) => {
             document.getElementById('sort-infos').innerHTML = 'Avis Croissant'
             button.value = 'vote_average.desc'
         }
-        console.log(button.value)
         sort = button.value
         getFilm(0,20)
     })
