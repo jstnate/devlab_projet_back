@@ -93,7 +93,7 @@
     <?php
         if (isset($_GET['status']) && $_GET['status'] == 'sucess') { ?>
             <h3 class="text-center w-full mb-[2vh]">Album partagé...</h3>
-        <?php } else { ?>
+        <?php } else if (isset($_GET['status']) && $_GET['status'] == 'error') { ?>
             <h3 class="text-center w-full mb-[2vh]">Erreur interne, veuillez réessayer...</h3>
         <?php }
     ?>
