@@ -74,6 +74,12 @@
             </ul>
         </div>
     </header>
+
+    <div class="w-[80vw] text-center mx-auto my-[6vh]">
+        <h1 class="text-3xl font-bold ">
+            Mes messages
+        </h1>
+    </div>
     <?php
         $messages = $connection->getMessage($_SESSION['user_id']);
 

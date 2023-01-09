@@ -22,7 +22,6 @@
     }
 
     if (isset($_POST['liked-mark'])) {
-        print_r('caca');
         $connection = new Connection();
         $id = $_POST['film-id'];
         $insert = $connection->insertFilm($id, $_SESSION['liked']);

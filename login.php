@@ -57,7 +57,7 @@
                 if (md5($_POST['password'] . 'SALT') === $user['password']) {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_name'] = $user['pseudo'];
-                    $getLiked = $connection->getAlbum('Films Aimés');
+                    $getLiked = $connection->getAlbum('Ma liste');
                     $getWatched = $connection->getAlbum('Films visionés');
                     $_SESSION['liked'] = $getLiked['id'];
                     $_SESSION['watched'] = $getWatched['id'];
