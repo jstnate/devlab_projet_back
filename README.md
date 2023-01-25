@@ -18,4 +18,9 @@ The technologies used for this site are :
 - Create albums
 - Share an album with an invitation link
 
+## Project Setup
+```
+git@github.com:jstnate/devlab_projet_back.git
+```
+
 ***Note that this project is completely back-end oriented, putting the front-end in the background***
